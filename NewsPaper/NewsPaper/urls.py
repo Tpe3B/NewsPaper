@@ -23,6 +23,7 @@ urlpatterns = [
     path('posts/', include('news.urls')),
     path('', include('protect.urls')),
     path('sign/', include('sign.urls')),
-    path('accounts/', include('allauth.urls'))
+    path('accounts/', include('allauth.urls')),
+
 
 ]

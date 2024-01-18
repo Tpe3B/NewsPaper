@@ -9,7 +9,7 @@ def send_notifications(preview, pk, title, subscribers):
         'post_created_email.html',
         {
 
-            'text':f'{preview[0:50]}...',
+            'text': preview,
             'link':f'{settings.SITE_URL}/posts/{pk}'
         }
     )

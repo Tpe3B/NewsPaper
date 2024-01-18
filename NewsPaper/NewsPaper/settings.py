@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-
+#from dotenv import load_dotenv
 
 
 
@@ -19,6 +19,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env_path = BASE_DIR/'.env'
+#load_dotenv(dotenv_path=env_path)
 
 
 
@@ -165,10 +166,16 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'avs-spider'
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASS')
+EMAIL_HOST_PASSWORD = '07Drose1!'
 EMAIL_USE_SSL = True
-DEFAULT_FROM_EMAIL = os.getenv('SERVER_EMAIL')
-
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER + '@ya.ru'
+#DEFAULT_FROM_EMAIL = 'EMAIL_HOST_USER'
+# EMAIL_HOST ='smtp.yandex.ru'
+# EMAIL_PORT= 465
+# EMAIL_HOST_USER= os.getenv('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD= os.getenv('EMAIL_HOST_PASSWORD')
+# EMAIL_USE_SSL=True
+# DEFAULT_FROM_EMAIL= os.getenv('DEFAULT_FROM_EMAIL')
 SITE_URL = 'http://127.0.0.1:8000'
 
 ACCOUNT_EMAIL_REQUIRED = True
@@ -181,3 +188,15 @@ ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
+
+# CELERY_BROKER_URL = 'redis://:RK6cx03e4e4H4qybCl4szzGdC4n7m5If@redis-15080.c309.us-east-2-1.ec2.cloud.redislabs.com:15080'
+# CELERY_RESULT_BACKEND = 'redis://:RK6cx03e4e4H4qybCl4szzGdC4n7m5If@redis-15080.c309.us-east-2-1.ec2.cloud.redislabs.com:15080'
+# CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

@@ -12,7 +12,7 @@ from datetime import date
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
-    template_name = 'index.html'
+    template_name = 'protect/index.html'
 
 
 
@@ -28,6 +28,7 @@ class PostsList(LoginRequiredMixin, ListView):
         self.filterset = PostFilter(self.request.GET, queryset)
         return self.filterset.qs
 
+   
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
@@ -66,20 +67,16 @@ class PostCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Post
     template_name = 'create_post.html'
 
+
+
     def form_valid(self, form):
-        post = form.save(commit=False)
-        author_posts_today = Post.objects.filter(time__date=date.today(), author=post.author).count()
-        if author_posts_today == 3:
-            return render(self.request, template_name='post_limit.html', context={'author': post.author})
-        else:
-            if '/article/' in self.request.path:
-                type_ = 'AR'
-            elif '/news/' in self.request.path:
-                type_ = 'NE'
-            self.object.type = type_
-            return super().form_valid(form)
-
-
+        self.object = form.save(commit=False)
+        if '/article/' in self.request.path:
+            type_ = 'AR'
+        elif '/news/' in self.request.path:
+            type_ = 'NE'
+        self.object.type = type_
+        return super().form_valid(form)
 class PostUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = ('post.change_post',)
     form_class = PostForm
@@ -93,7 +90,7 @@ class PostDelete(DeleteView):
     success_url = reverse_lazy('post_list')
 
 
-class CategoryListView(PostsList):
+class CategoryListView(ListView):
     model = Post
     template_name = 'category_list.html'
     context_object_name = 'category_news_list'
@@ -118,7 +115,7 @@ def subscribe(request, pk):
     category = Category.objects.get(id=pk)
     category.subscribers.add(user)
     message = 'Вы успешно подписались на рассылку новостей категории'
-    return  render(request, 'subscribe.html', {'category': category, 'message' : message})
+    return  render(request, 'subscribers.html', {'category': category, 'message' : message})
 
 
 

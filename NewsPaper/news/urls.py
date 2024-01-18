@@ -1,14 +1,7 @@
 from django.urls import path
+from .views import PostsList, PostDetail, PostSearch, PostCreate, PostUpdate, PostDelete, CategoryListView, subscribe, \
+   IndexView
 from django.urls import path
-
-
-from .views import PostsList, PostDetail, PostSearch, PostCreate, PostUpdate, PostDelete, CategoryListView, subscribe
-
-
-from django.urls import path
-# Импортируем созданные нами представления
-from .views import PostsList, PostDetail, PostSearch, PostCreate, PostUpdate, PostDelete
-from .views import PostsList, PostDetail, PostSearch, PostCreate, PostUpdate, PostDelete, CategoryListView, subscribe
 
 urlpatterns = [
    # path — означает путь.
@@ -27,6 +20,7 @@ urlpatterns = [
    path('<int:pk>/delete/', PostDelete.as_view(), name='delete'),
    path('categories/<int:pk>', CategoryListView.as_view(), name='category_list'),
    path('categories/<int:pk>/subscribe', subscribe, name='subscribe'),
+   path('profile/', IndexView.as_view()),
 ]
 
 
