@@ -12,7 +12,123 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 #from dotenv import load_dotenv
+import logging
 
+logger = logging.getLogger('django')
+logger = logging.getLogger('django.request')
+logger = logging.getLogger('django.server')
+logger = logging.getLogger('django.template')
+logger = logging.getLogger('django.db.backends')
+logger = logging.getLogger('django.security')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'style' : '{',
+    'formatters': {
+        'simple': {
+            'format': '%(levelname)s %(message)s',
+            'datefmt': '%Y-%m-%d %H-%M:',
+        },
+        'info': {
+            'format': '%(asctime)s % (levelname)s %(module)s %(message)s%',
+            'datefmt': '%Y-%m-%d %H-%M:',
+        },
+        'warning': {
+            'format': '%(asctime)s % (levelname)s % (pathname)s %(message)s%',
+            'datefmt': '%Y-%m-%d %H-%M:',
+
+        },
+        'errors': {
+            'format': '%(asctime)s % (levelname)s % (pathname)s %(message)s %(exc_info)s',
+            'datefmt': '%Y-%m-%d %H-%M:',
+
+        },
+        'security': {
+            'format': '%(asctime)s % (levelname)s % (module)s %(message)s',
+            'datefmt': '%Y-%m-%d %H-%M:',
+
+        }
+    },
+
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+
+        'file_general':{
+            'level':'INFO',
+            'filters': ['require_debug_false'],
+            'class':'logging.FileHandler',
+            'formatter':'info',
+            'filename':'logs/general.log'
+        },
+
+        'file_errors':{
+            'level':'ERROR',
+            'filters': ['require_debug_true'],
+            'class':'logging.FileHandler',
+            'formatter':'errors',
+            'filename':'logs/errors.log',
+        },
+
+        'file_security':{
+            'level':'WARNING',
+            'filters': ['require_debug_true'],
+            'class':'logging.FileHandler',
+            'formatter':'security',
+            'filename':'logs/security.log',
+        },
+
+        'mail_admin': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'warning',
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file_general'],
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['console', 'file_errors', 'file_general', 'mail_admin'],
+            'propagate': True,
+        },
+
+        'django.server': {
+            'handlers': ['file_errors', 'mail_admin'],
+            'propagate': True,
+        },
+
+        'django.template': {
+            'handlers': ['file_errors'],
+            'propagate': True,
+        },
+
+        'django.db.backends': {
+            'handlers': ['file_errors'],
+            'propagate': True,
+        },
+
+        'django.security': {
+            'handlers': ['file_errors'],
+            'propagate': True,
+        }
+    }
+}
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -200,3 +316,10 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'), # Указываем, куда будем сохранять кэшируемые файлы! Не забываем создать папку cache_files внутри папки с manage.py!
+    }
+}

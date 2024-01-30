@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 from datetime import date
+from django.core.cache import cache
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -41,6 +42,12 @@ class PostDetail(DetailView):
     model = Post
     template_name = 'news.html'
     context_object_name = 'news'
+
+    def get_object(self, *args, **kwargs):
+        obj = cache.get(f'product-{self.kwargs["pk"]}', None)
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'product-{self.kwargs["pk"]}', obj)
 
 
 class PostSearch(ListView):
@@ -82,6 +89,8 @@ class PostUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'create_post.html'
+
+
 
 
 class PostDelete(DeleteView):

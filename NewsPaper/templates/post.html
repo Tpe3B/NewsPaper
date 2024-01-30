@@ -2,6 +2,14 @@
 {% extends 'flatpages/default.html' %}
 {% load custom_filters %}
 {% load custom_tags %}
+{% load cache %}<!-- Загружаем кэширование -->
+
+
+{% cache 20 header %} <!-- Кэшируем отдельный блок на 30 секунд -->
+    {% block header %}
+    {% endblock header %}
+{% endcache %}
+
 
 {% block title %}
 Posts
