@@ -72,7 +72,7 @@ LOGGING = {
             'filters': ['require_debug_false'],
             'class':'logging.FileHandler',
             'formatter':'info',
-            'filename':'logs/general.log'
+            'filename':'general.log'
         },
 
         'file_errors':{
@@ -80,7 +80,7 @@ LOGGING = {
             'filters': ['require_debug_true'],
             'class':'logging.FileHandler',
             'formatter':'errors',
-            'filename':'logs/errors.log',
+            'filename':'errors.log',
         },
 
         'file_security':{
@@ -88,7 +88,7 @@ LOGGING = {
             'filters': ['require_debug_true'],
             'class':'logging.FileHandler',
             'formatter':'security',
-            'filename':'logs/security.log',
+            'filename':'security.log',
         },
 
         'mail_admin': {
